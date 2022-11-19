@@ -18,6 +18,7 @@ stages:
       - src/pytorch_cnn_models.py
       - src/pytorch_data_loader.py
       - intermediate_outputs/train_labels.pickle
+      - config/models_config.py
     outs:
       - "intermediate_outputs/train_acc_df.csv"
       - "intermediate_outputs/train_loss_df.csv":

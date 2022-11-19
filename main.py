@@ -16,7 +16,7 @@ from config.models_config import image_size, num_epochs, batch_size, learning_ra
 from torchsampler import ImbalancedDatasetSampler
 
 
-def train(cnn, num_epochs, device, train_loader, optimizer, criterion, calc_f1_score, loss_stats, accuracy_stats, model_name):
+def train(cnn, num_epochs, device, train_loader, val_loader ,optimizer, criterion, calc_f1_score, loss_stats, accuracy_stats, model_name):
     #TRAIN
     start_time = time.time()
     
@@ -51,9 +51,36 @@ def train(cnn, num_epochs, device, train_loader, optimizer, criterion, calc_f1_s
             
             if i % 100 == 0:
                 print('Batch {0} Loss: {1} '.format(i, train_loss.item()))
+                
+        #Validation
+        with torch.no_grad():
+            val_epoch_loss = 0
+            val_epoch_acc = 0
+
+            cnn.eval()
+
+            for images_val, labels_val, image_row in val_loader:
+                
+                #load images and labels in batches
+                images_val = Variable(images_val).to(device)
+                labels_val = Variable(labels_val).to(device)
+
+                #output of cnn after inputing images
+                optimizer.zero_grad()
+                outputs = cnn(images_val)
+
+                #training loss and accuracy
+                val_loss = criterion(outputs, labels_val)
+                val_acc = calc_f1_score(outputs, labels_val)
+                
+                val_epoch_loss += val_loss.item()
+                val_epoch_acc += val_acc.item()
         
         loss_stats['train'].append(train_epoch_loss/len(train_loader))
+        loss_stats['val'].append(val_epoch_loss/len(val_loader))
+
         accuracy_stats['train'].append(train_epoch_acc/len(train_loader))
+        accuracy_stats['val'].append(val_epoch_acc/len(val_loader))
         
         train_acc_df = pd.DataFrame.from_dict(accuracy_stats).reset_index().melt(id_vars=['index']).rename(columns={"index":"epochs"})
         train_loss_df = pd.DataFrame.from_dict(loss_stats).reset_index().melt(id_vars=['index']).rename(columns={"index":"epochs"})
@@ -61,7 +88,7 @@ def train(cnn, num_epochs, device, train_loader, optimizer, criterion, calc_f1_s
         train_acc_df.to_csv(r'intermediate_outputs/train_acc_df.csv')
         train_loss_df.to_csv(r'intermediate_outputs/train_loss_df.csv')
         
-        print(f'Epoch {epoch+0:03}: | Train Loss: {train_epoch_loss/len(train_loader):.5f} | Training F1 Score: {train_epoch_acc/len(train_loader):.5f}')
+        print(f'Epoch {epoch+0:03}: | Train Loss: {train_epoch_loss/len(train_loader):.5f} | Val Loss: {val_epoch_loss/len(val_loader):.5f} | Val F1 Score: {val_epoch_acc/len(val_loader):.5f}')
         print("Epoch Done")
     
     print("Saving model at model/" + model_name)
@@ -111,16 +138,26 @@ if __name__ == '__main__':
     # ---------------------------------------------------------------- TRAIN ---------------------------------------------------------------- #
     
     train_labels_df = pd.read_pickle("intermediate_outputs/train_labels.pickle")
+    val_labels_df = pd.read_pickle("intermediate_outputs/val_labels.pickle")
+    
     
     train_df = customdataset(train_labels_df,image_size, set_type="train" ,transforms = transforms)
+    val_df = customdataset(val_labels_df,image_size, set_type="val" ,transforms = transforms)
     train_loader = (DataLoader(train_df, batch_size = batch_size, shuffle=False, sampler=ImbalancedDatasetSampler(train_df)))
+    val_loader = (DataLoader(val_df, batch_size = 1, shuffle=False))
     
     #get model
     cnn = AlexNet()
     #model to device
     cnn.to(device)
-    accuracy_stats = {'train': []}
-    loss_stats = {'train': []}
+    accuracy_stats = {
+        'train': [],
+        "val": []
+    }
+    loss_stats = {
+        'train': [],
+        "val": []
+    }
     
     # Loss and Optimizer
     criterion = nn.CrossEntropyLoss()
@@ -130,13 +167,13 @@ if __name__ == '__main__':
           num_epochs,
           device,
           train_loader,
+          val_loader,
           optimizer,
           criterion,
           calc_f1_score,
           loss_stats,
           accuracy_stats,
           model_name = "alexnet_cnn_model")
-    
     
 # ---------------------------------------------------------------- TEST ---------------------------------------------------------------- #    
     
