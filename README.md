@@ -12,11 +12,11 @@ pipenv shell && pipenv install #initiate vitual enviroment
 # Run pipeline
 - First you need to download and save the training and test data in the root directory as follows:
 .
-├── ...
-├── data
-│   ├── train_test_data          # Load and stress tests
-│   ├── train.csv                # End-to-end, integration tests (alternatively `e2e`)
-│   └── test.csv                 # Unit tests
+
+├── data    
+│    ├── train_test_data       
+│    ├── train.csv               
+│    └── test.csv   
 └── ...
 
 - you can then run the pipeline using `dvc repro`. the pipeline stages, outpots and dependencies can be found in `dvc.yaml`
