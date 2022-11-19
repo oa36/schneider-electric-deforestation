@@ -14,9 +14,9 @@ pipenv shell && pipenv install #initiate vitual enviroment
 
 <pre>
 ├── data    
-├── train_test_data       
-│    ├── train.csv               
-│    └── test.csv   
+│  ├── train_test_data       
+│  ├── train.csv               
+│  └── test.csv   
 └── ...
 </pre>
 
