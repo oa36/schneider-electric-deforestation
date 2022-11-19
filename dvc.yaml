@@ -1,0 +1,26 @@
+stages:
+  prepare_labels:
+    cmd: pipenv run python src/prep_classes.py
+    deps:
+      - src/prep_classes.py
+      - data/train.csv
+      - data/test.csv
+    outs:
+      - "intermediate_outputs/train_labels.pickle":
+          cache: false
+      - "intermediate_outputs/test_labels.pickle":
+          cache: false
+  train_and_test_model:
+    cmd: pipenv run python main.py
+    deps:
+      - main.py
+      - src/prep_classes.py
+      - src/pytorch_cnn_models.py
+      - src/pytorch_data_loader.py
+      - intermediate_outputs/train_labels.pickle
+    outs:
+      - "intermediate_outputs/train_acc_df.csv"
+      - "intermediate_outputs/train_loss_df.csv":
+          cache: false
+      - "predictions.json":
+          cache: false

@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+tqdm = "*"
+numpy = "*"
+pandas = "*"
+opencv-python = "*"
+torch = "*"
+torchvision = "*"
+torchaudio = "*"
+plotly = "*"
+nbformat = "*"
+matplotlib = "*"
+scikit-learn = "*"
+seaborn = "*"
+
+[dev-packages]
+ipykernel = "*"
+
+[requires]
+python_version = "3.9"
+
+[pipenv]
+allow_prereleases = true

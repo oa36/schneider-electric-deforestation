@@ -1,0 +1,74 @@
+schema: '2.0'
+stages:
+  prepare_labels:
+    cmd: pipenv run python src/prep_classes.py
+    deps:
+    - path: data/test.csv
+      md5: f9c6b513fb437f4a167532e484e12efd
+      size: 46610
+    - path: data/train.csv
+      md5: 0868925e73df7f4ddf92ccbd229fd288
+      size: 130952
+    - path: src/prep_classes.py
+      md5: 156ef9fc3f9c40caf6e86effec754553
+      size: 699
+    outs:
+    - path: intermediate_outputs/test_labels.pickle
+      md5: bb66fedbbe86675a8bb7f30edcb7cab3
+      size: 40587
+    - path: intermediate_outputs/train_labels.pickle
+      md5: c344f62e7067499ee159b7fbff07797f
+      size: 123483
+  train_model:
+    cmd: pipenv run python src/train.py
+    deps:
+    - path: intermediate_outputs/train_labels.pickle
+      md5: c344f62e7067499ee159b7fbff07797f
+      size: 123483
+    - path: src/prep_classes.py
+      md5: 156ef9fc3f9c40caf6e86effec754553
+      size: 699
+    - path: src/pytorch_cnn_models.py
+      md5: dee632d338338027033785388cf46dd5
+      size: 1850
+    - path: src/pytorch_data_loader.py
+      md5: 5e2cdd6d80350806a9a937096a21c9f0
+      size: 1529
+    - path: src/train.py
+      md5: a735ee0fa5ed4c5d3676cc76ad621dd3
+      size: 3529
+    outs:
+    - path: intermediate_outputs/train_acc_df.csv
+      md5: f8b22b48b17e91a25ef034c32b62cf7d
+      size: 623
+    - path: intermediate_outputs/train_loss_df.csv
+      md5: 020eac0729231a4cf6dd54adcbf52b12
+      size: 622
+  train_and_test_model:
+    cmd: pipenv run python main.py
+    deps:
+    - path: intermediate_outputs/train_labels.pickle
+      md5: c344f62e7067499ee159b7fbff07797f
+      size: 123483
+    - path: main.py
+      md5: 8a0a2671a1d9e72ba1ff0159099ccaf5
+      size: 5173
+    - path: src/prep_classes.py
+      md5: 156ef9fc3f9c40caf6e86effec754553
+      size: 699
+    - path: src/pytorch_cnn_models.py
+      md5: dee632d338338027033785388cf46dd5
+      size: 1850
+    - path: src/pytorch_data_loader.py
+      md5: 07f290934635ba260b7a86582429f390
+      size: 1548
+    outs:
+    - path: intermediate_outputs/train_acc_df.csv
+      md5: c8ff935c8a0b78a05014d4188c3401e2
+      size: 624
+    - path: intermediate_outputs/train_loss_df.csv
+      md5: f5dc5e54a9676d51ca20a580983a85f1
+      size: 620
+    - path: predictions.json
+      md5: 8d4c508f30378cda5137bf13ca66cb9a
+      size: 6252

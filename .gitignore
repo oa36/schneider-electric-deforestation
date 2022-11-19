@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+.env
+data/*
+
+src/__pycache__
+model_test.ipynb
+
+model/*
+
+.DS_Store
