@@ -27,6 +27,8 @@ class customdataset(Dataset):
             self.label_array = np.zeros(len(self.data_info.index))
         
         self.transforms = transforms
+        
+    def get_labels(self): return self.label_array        
 
     def __getitem__(self,index):
         #image name

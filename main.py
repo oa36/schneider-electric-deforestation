@@ -13,6 +13,8 @@ from src.pytorch_cnn_models import *
 from src.utils import calc_f1_score, get_key
 from config.models_config import image_size, num_epochs, batch_size, learning_rate
 
+from torchsampler import ImbalancedDatasetSampler
+
 
 def train(cnn, num_epochs, device, train_loader, optimizer, criterion, calc_f1_score, loss_stats, accuracy_stats, model_name):
     #TRAIN
@@ -111,7 +113,7 @@ if __name__ == '__main__':
     train_labels_df = pd.read_pickle("intermediate_outputs/train_labels.pickle")
     
     train_df = customdataset(train_labels_df,image_size, set_type="train" ,transforms = transforms)
-    train_loader = (DataLoader(train_df, batch_size = batch_size, shuffle=True))
+    train_loader = (DataLoader(train_df, batch_size = batch_size, shuffle=False, sampler=ImbalancedDatasetSampler(train_df)))
     
     #get model
     cnn = AlexNet()
