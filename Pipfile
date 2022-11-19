@@ -16,6 +16,7 @@ nbformat = "*"
 matplotlib = "*"
 scikit-learn = "*"
 seaborn = "*"
+torchsampler = "*"
 
 [dev-packages]
 ipykernel = "*"

@@ -15,7 +15,7 @@ class customdataset(Dataset):
         self.data_len = len(self.data_info.index)
         #image_rows
         self.image_rows = dataset.index
-        if set_type == "train":
+        if set_type == "train" or set_type == "val":
             #image paths 
             self.image_array = np.asarray(self.data_info.iloc[:,4])
             #labels 
@@ -27,6 +27,8 @@ class customdataset(Dataset):
             self.label_array = np.zeros(len(self.data_info.index))
         
         self.transforms = transforms
+        
+    def get_labels(self): return self.label_array        
 
     def __getitem__(self,index):
         #image name

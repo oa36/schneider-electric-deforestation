@@ -10,15 +10,15 @@ stages:
       md5: 0868925e73df7f4ddf92ccbd229fd288
       size: 130952
     - path: src/prep_classes.py
-      md5: 156ef9fc3f9c40caf6e86effec754553
-      size: 699
+      md5: 7b6889472cec314d3505ae785cca4104
+      size: 998
     outs:
     - path: intermediate_outputs/test_labels.pickle
       md5: bb66fedbbe86675a8bb7f30edcb7cab3
       size: 40587
     - path: intermediate_outputs/train_labels.pickle
-      md5: c344f62e7067499ee159b7fbff07797f
-      size: 123483
+      md5: 48e95b3bddcac0e34a31723636c302ef
+      size: 116774
   train_model:
     cmd: pipenv run python src/train.py
     deps:
@@ -47,28 +47,31 @@ stages:
   train_and_test_model:
     cmd: pipenv run python main.py
     deps:
+    - path: config/models_config.py
+      md5: ed0475e7f975d49920c343cb11bab837
+      size: 170
     - path: intermediate_outputs/train_labels.pickle
-      md5: c344f62e7067499ee159b7fbff07797f
-      size: 123483
+      md5: 48e95b3bddcac0e34a31723636c302ef
+      size: 116774
     - path: main.py
-      md5: 8a0a2671a1d9e72ba1ff0159099ccaf5
-      size: 5173
+      md5: 480026b552e921558cb088dd5d262a94
+      size: 6604
     - path: src/prep_classes.py
-      md5: 156ef9fc3f9c40caf6e86effec754553
-      size: 699
+      md5: 7b6889472cec314d3505ae785cca4104
+      size: 998
     - path: src/pytorch_cnn_models.py
       md5: dee632d338338027033785388cf46dd5
       size: 1850
     - path: src/pytorch_data_loader.py
-      md5: 07f290934635ba260b7a86582429f390
-      size: 1548
+      md5: 0a8340b8a2b27b64cf893b6150cd2660
+      size: 1636
     outs:
     - path: intermediate_outputs/train_acc_df.csv
-      md5: c8ff935c8a0b78a05014d4188c3401e2
-      size: 624
+      md5: 33fc46730bec9166bd92d78057ce5cd3
+      size: 2361
     - path: intermediate_outputs/train_loss_df.csv
-      md5: f5dc5e54a9676d51ca20a580983a85f1
-      size: 620
+      md5: bbd4404c585f17acf86d3aa93ff4ddc8
+      size: 2380
     - path: predictions.json
-      md5: 8d4c508f30378cda5137bf13ca66cb9a
+      md5: a4e97628574fd68394d99ea83155d468
       size: 6252
